@@ -1,7 +1,21 @@
 const express = require("express");
 const path = require("path");
+const Ajv = require("ajv");
 const app = express();
 const port = process.env.PORT || 3003;
+const ajv = new Ajv();
+// json scheme
+const schema = {
+  type: "object",
+  properties: {
+    name: { type: "string" },
+    debt: { type: "string", maxLength: 2 },
+  },
+  required: ["name", "debt"],
+  additionalProperties: false
+};
+
+const validate = ajv.compile(schema);
 //& Middleware are used
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -46,10 +60,14 @@ app.get("/api/students/:id", (req, res) => {
 
 // Create new Student
 app.post("/api/students/", (req, res) => {
-  req.body.id = Students.length + 1;
-  console.log(req.body);
-  Students.push(req.body);
-  res.json(req.body);
+  let valid = validate(req.body);
+  
+  if (valid) {
+    req.body.id = Students.length + 1;
+    console.log(req.body);
+    Students.push(req.body);
+    res.json(req.body);
+  } else res.status(403).send("Forbidden command");
 });
 // Delete Student
 app.delete("/api/students/:id", (req, res) => {
