@@ -20,6 +20,7 @@
             if (xhr.readyState == 4)
                 if (xhr.status == 200) {
                     var dataObj = JSON.parse(xhr.responseText);
+                    console.log('data', dataObj);
                 }
         }
         xhr.send({});
