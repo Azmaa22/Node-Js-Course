@@ -7,8 +7,7 @@ const ejs = require("ejs");
 const studentRouter = require('./routes/students');
 const loggingMiddleware = require('./middlewares/logging');
 const port = process.env.PORT || 3001;
-app.use(express.urlencoded({ extended: true }));
-app.use(express.json());
+
 app.use(cookieParser());
 app.use(helmet());
 app.use('/api/students', studentRouter);
